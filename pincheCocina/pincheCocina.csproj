@@ -61,4 +61,10 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="MVVM\Models\" />
+	  <Folder Include="MVVM\Views\" />
+	  <Folder Include="MVVM\ViewModels\" />
+	</ItemGroup>
+
 </Project>
