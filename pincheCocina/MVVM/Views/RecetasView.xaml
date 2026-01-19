@@ -3,38 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="pincheCocina.MVVM.Views.RecetasView"
              Title="RecetasView">
-    <CollectionView ItemsSource="{Binding ListaRecetas}" ItemSizingStrategy="MeasureAllItems">
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <Frame Margin="10" Padding="15" CornerRadius="10" BackgroundColor="Grey">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="{Binding Nombre}" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource PrimaryDarkText}"/>
+    <Grid>
+        <CollectionView ItemsSource="{Binding ListaRecetas}" ItemSizingStrategy="MeasureAllItems">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="10" Padding="15" CornerRadius="10" BackgroundColor="Grey">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding Nombre}" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource PrimaryDarkText}"/>
 
-                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Pasos}" Spacing="15">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <VerticalStackLayout>
-                                        <Label Text="{Binding Accion}" FontAttributes="Italic" FontSize="18"/>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Pasos}" Spacing="15">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <VerticalStackLayout>
+                                            <Label Text="{Binding Accion}" FontAttributes="Italic" FontSize="18"/>
 
-                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingredientes}" Margin="15,5,0,0">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate>
-                                                    <HorizontalStackLayout Spacing="5">
-                                                        <Label Text="•" />
-                                                        <Label Text="{Binding Cantidad}" />
-                                                        <Label Text="{Binding Unidad}" />
-                                                        <Label Text="{Binding Nombre}" FontAttributes="Bold" />
-                                                    </HorizontalStackLayout>
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
+                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingredientes}" Margin="15,5,0,0">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <HorizontalStackLayout Spacing="5">
+                                                            <Label Text="•" />
+                                                            <Label Text="{Binding Cantidad}" />
+                                                            <Label Text="{Binding Unidad}" />
+                                                            <Label Text="{Binding Nombre}" FontAttributes="Bold" />
+                                                        </HorizontalStackLayout>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </VerticalStackLayout>
                                         </VerticalStackLayout>
-                                    </VerticalStackLayout>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
-                    </VerticalStackLayout>
-                </Frame>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button Text="＋"
+                Clicked="Button_Clicked"
+                WidthRequest="60"
+                HeightRequest="60"
+                CornerRadius="30"
+                BackgroundColor="DodgerBlue"
+                TextColor="White"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="20"/>
+    </Grid>
+    
 </ContentPage>
