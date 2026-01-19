@@ -9,25 +9,7 @@ namespace pincheCocina.MVVM.Models
         public string Accion { get; set; }
         public List<Ingrediente> Ingredientes { get; set; } = new();
 
-        public PasoReceta(string accion_)
-        {
-            Accion = accion_;
-        }
-
-        public bool AddAccion(string accion_)
-        {
-            if (accion_ != null)
-            {
-                Accion = accion_;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public bool addIngrediente(Ingrediente ingrediente)
+        public bool AddIngrediente(Ingrediente ingrediente)
         {
             if (ingrediente != null)
             {
@@ -35,9 +17,18 @@ namespace pincheCocina.MVVM.Models
                 return true;
             }
             else
-            {
                 return false;
-            }
+            
         }
+
+        public bool RemoveIngrediente(Ingrediente ingrediente)
+        {
+            return (ingrediente != null) ? Ingredientes.Remove(ingrediente) : false;
+        }
+
+            
+        
+
+        
     }
 }

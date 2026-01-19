@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using pincheCocina.MVVM.ViewModels;
+using pincheCocina.MVVM.Views;
 
 namespace pincheCocina
 {
@@ -11,7 +13,7 @@ namespace pincheCocina
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            return new Window(new NavigationPage(new RecetasView(new RecetasViewModel())));
         }
     }
 }
