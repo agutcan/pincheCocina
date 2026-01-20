@@ -1,4 +1,5 @@
 using pincheCocina.MVVM.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace pincheCocina.MVVM.Views;
 
@@ -10,9 +11,9 @@ public partial class RecetasView : ContentPage
 		BindingContext = vm;
 	}
 
-    private void Button_Clicked(object sender, EventArgs e)
+    private async void Button_Clicked(object sender, EventArgs e)
     {
-        var vm = BindingContext as RecetasViewModel;
-        Navigation.PushAsync(new RecetasView(vm));
+        var page = App.Services.GetRequiredService<CrearReceta>();
+        await Navigation.PushAsync(page);
     }
 }
