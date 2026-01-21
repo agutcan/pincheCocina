@@ -1,4 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using pincheCocina.MVVM.Models;
+using pincheCocina.MVVM.Views;
+
+#if WINDOWS
+using pincheCocina.Platforms;
+#endif
 
 namespace pincheCocina
 {
@@ -17,6 +23,13 @@ namespace pincheCocina
 
 #if DEBUG
     		builder.Logging.AddDebug();
+#endif
+
+            builder.Services.AddTransient<CrearReceta>();
+
+#if WINDOWS
+
+            builder.Services.AddSingleton<ISpeechToText, SpeechToTextImplementation>();
 #endif
 
             return builder.Build();
