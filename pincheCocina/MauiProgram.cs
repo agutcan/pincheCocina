@@ -1,6 +1,16 @@
+<<<<<<< HEAD
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using pincheCocina.Data;
+=======
+﻿using Microsoft.Extensions.Logging;
+using pincheCocina.MVVM.Models;
+using pincheCocina.MVVM.Views;
+
+#if WINDOWS
+using pincheCocina.Platforms;
+#endif
+>>>>>>> ffdf4cec6159daadb8375bd2f2e66e181a4e5828
 
 namespace pincheCocina
 {
@@ -27,6 +37,13 @@ namespace pincheCocina
                 options.UseSqlite($"Data Source={dbPath}"));
 #if DEBUG
             builder.Logging.AddDebug();
+#endif
+
+            builder.Services.AddTransient<CrearReceta>();
+
+#if WINDOWS
+
+            builder.Services.AddSingleton<ISpeechToText, SpeechToTextImplementation>();
 #endif
 
             return builder.Build();

@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using PropertyChanged;
 
-namespace pincheCocina.MVVM.Models
+namespace pincheCocina.MVVM.Models;
+
+[AddINotifyPropertyChangedInterface]
+public class Ingrediente
 {
+<<<<<<< HEAD
     public class Ingrediente
     {
         public int Id { get; set; }
@@ -34,4 +39,9 @@ namespace pincheCocina.MVVM.Models
             Unidad = unidad_;
         }
     }
+=======
+    public string Nombre { get; set; }
+    public string Cantidad { get; set; }
+    public string Unidad { get; set; }
+>>>>>>> ffdf4cec6159daadb8375bd2f2e66e181a4e5828
 }
