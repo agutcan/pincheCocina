@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using pincheCocina.Data;
 using pincheCocina.MVVM.Models;
 using pincheCocina.MVVM.Views;
-using pincheCocina.MVVM.ViewModels; // Asegúrate de tener este using
+using pincheCocina.MVVM.ViewModels; 
 
 #if WINDOWS
 using pincheCocina.Platforms;

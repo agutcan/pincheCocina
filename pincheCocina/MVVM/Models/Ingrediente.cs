@@ -8,7 +8,6 @@ namespace pincheCocina.MVVM.Models;
 [AddINotifyPropertyChangedInterface]
 public class Ingrediente
 {
-
     public int Id { get; set; }
 
     // Relación con PasoReceta
