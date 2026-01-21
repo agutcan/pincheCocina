@@ -9,62 +9,30 @@
         <VerticalStackLayout Spacing="20">
 
             <VerticalStackLayout Spacing="8">
-                <Label Text="Nombre de la Receta" 
-                       FontAttributes="Bold" 
-                       FontSize="16" 
-                       TextColor="DodgerBlue"/>
+                <Label Text="Nombre de la Receta" FontAttributes="Bold" FontSize="16" TextColor="DodgerBlue"/>
                 <Frame Padding="10,2" BorderColor="#E0E0E0" CornerRadius="10" HasShadow="False">
-                    <Entry x:Name="txtNombre" 
-                           Placeholder="Ej: Paella Valenciana" 
-                           FontSize="18"/>
+                    <Entry x:Name="txtNombre" Placeholder="Ej: Tacos al Pastor" FontSize="18"/>
                 </Frame>
             </VerticalStackLayout>
 
             <BoxView HeightRequest="1" Color="#F0F0F0" Margin="0,10"/>
 
-            <Label Text="Dictar Pasos e Ingredientes" 
-                   FontAttributes="Bold" 
-                   FontSize="16" 
-                   TextColor="DodgerBlue"/>
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" HeightRequest="30" IsVisible="{Binding EstaEscuchando}">
+                <Ellipse WidthRequest="12" HeightRequest="12" Fill="Red" VerticalOptions="Center"/>
+                <Label Text="GRABANDO..." TextColor="Red" FontAttributes="Bold" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
 
-            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
-                <Button Grid.Column="0"
-                        Text="🎙️ Iniciar Dictado" 
-                        Clicked="OnListenClicked"
-                        BackgroundColor="DodgerBlue" 
-                        TextColor="White"
-                        CornerRadius="10"
-                        FontAttributes="Bold"/>
-
-                <Button Grid.Column="1"
-                        Text="🛑" 
-                        Clicked="OnCancelListenClicked"
-                        BackgroundColor="#FF5252" 
-                        TextColor="White"
-                        WidthRequest="50"
-                        CornerRadius="10"/>
+            <Grid ColumnDefinitions="*, *, Auto" ColumnSpacing="10">
+                <Button Grid.Column="0" Text="🎙️ Dictar" Clicked="OnListenClicked" BackgroundColor="DodgerBlue" TextColor="White" FontAttributes="Bold" CornerRadius="10"/>
+                <Button Grid.Column="1" Text="🗑️ Limpiar" Clicked="OnLimpiarClicked" BackgroundColor="#9E9E9E" TextColor="White" CornerRadius="10"/>
+                <Button Grid.Column="2" Text="🛑" Clicked="OnCancelListenClicked" BackgroundColor="#FF5252" TextColor="White" WidthRequest="50" CornerRadius="10"/>
             </Grid>
 
-            <Frame BackgroundColor="#F9F9F9" 
-                   BorderColor="#E0E0E0" 
-                   HasShadow="False" 
-                   CornerRadius="10" 
-                   MinimumHeightRequest="150">
-                <Label x:Name="lblRecognitionText" 
-                       Text="{Binding RecognitionText}" 
-                       TextColor="#424242"
-                       FontSize="15" />
+            <Frame BackgroundColor="#F9F9F9" BorderColor="#E0E0E0" HasShadow="False" CornerRadius="10" MinimumHeightRequest="120">
+                <Label x:Name="lblRecognitionText" Text="{Binding RecognitionText}" TextColor="#424242" FontSize="15" FontAttributes="Italic" HorizontalTextAlignment="Center"/>
             </Frame>
 
-            <Button Text="💾 Guardar Receta" 
-                    Clicked="OnGuardarClicked"
-                    BackgroundColor="#2ECC71"
-                    TextColor="White"
-                    FontSize="18"
-                    FontAttributes="Bold"
-                    HeightRequest="60"
-                    CornerRadius="15"
-                    Margin="0,20,0,0"/>
+            <Button Text="💾 Guardar Receta" Clicked="OnGuardarClicked" BackgroundColor="#2ECC71" TextColor="White" FontSize="18" FontAttributes="Bold" HeightRequest="60" CornerRadius="15" Margin="0,20,0,0"/>
 
         </VerticalStackLayout>
     </ScrollView>

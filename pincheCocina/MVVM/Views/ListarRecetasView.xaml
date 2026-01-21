@@ -21,35 +21,13 @@
                                 <VerticalStackLayout Padding="15" Spacing="12">
                                     <Grid ColumnDefinitions="*, Auto">
                                         <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
-                                            <Label Text="{Binding Nombre}" 
-                                                   FontSize="20" 
-                                                   FontAttributes="Bold" 
-                                                   TextColor="#212121" 
-                                                   LineBreakMode="WordWrap"/>
-                                            <Label Text="{Binding Pasos.Count, StringFormat='{0} pasos detallados'}" 
-                                                   FontSize="12" 
-                                                   TextColor="DodgerBlue" 
-                                                   FontAttributes="Bold"/>
+                                            <Label Text="{Binding Nombre}" FontSize="20" FontAttributes="Bold" TextColor="#212121" LineBreakMode="WordWrap"/>
+                                            <Label Text="{Binding Pasos.Count, StringFormat='{0} pasos detallados'}" FontSize="12" TextColor="DodgerBlue" FontAttributes="Bold"/>
                                         </VerticalStackLayout>
 
                                         <HorizontalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Start">
-                                            <Button Text="Modificar" 
-                                                    FontSize="10"
-                                                    HeightRequest="30"
-                                                    Padding="8,0"
-                                                    BackgroundColor="Transparent"
-                                                    TextColor="DodgerBlue"
-                                                    Clicked="OnModificarClicked"
-                                                    CommandParameter="{Binding .}"/>
-
-                                            <Button Text="Eliminar" 
-                                                    FontSize="10"
-                                                    HeightRequest="30"
-                                                    Padding="8,0"
-                                                    BackgroundColor="Transparent"
-                                                    TextColor="#FF5252"
-                                                    Clicked="OnEliminarClicked"
-                                                    CommandParameter="{Binding .}"/>
+                                            <Button Text="Modificar" FontSize="10" HeightRequest="30" Padding="8,0" BackgroundColor="Transparent" TextColor="DodgerBlue" Clicked="OnModificarClicked" CommandParameter="{Binding .}"/>
+                                            <Button Text="Eliminar" FontSize="10" HeightRequest="30" Padding="8,0" BackgroundColor="Transparent" TextColor="#FF5252" Clicked="OnEliminarClicked" CommandParameter="{Binding .}"/>
                                         </HorizontalStackLayout>
                                     </Grid>
 
@@ -64,14 +42,26 @@
                                                         <Label Text="{Binding Accion}" FontSize="15" TextColor="#424242" FontAttributes="Bold"/>
                                                     </HorizontalStackLayout>
 
-                                                    <Frame BackgroundColor="#F9F9F9" BorderColor="Transparent" Padding="12,10" Margin="20,0,0,0" CornerRadius="10" HasShadow="False">
+                                                    <Frame BackgroundColor="#F9F9F9" 
+       BorderColor="Transparent" 
+       Padding="12,10" 
+       Margin="20,0,0,0" 
+       CornerRadius="10" 
+       HasShadow="False"
+       IsVisible="{Binding ., Converter={StaticResource IntToBoolConverter}}">
+
                                                         <VerticalStackLayout>
-                                                            <HorizontalStackLayout IsVisible="{Binding TieneTiempo}" Spacing="6" Margin="0,0,0,5">
+                                                            <HorizontalStackLayout IsVisible="{Binding TiempoMinutos, Converter={StaticResource IntToBoolConverter}}" 
+                               Spacing="6" Margin="0,0,0,5">
                                                                 <Label Text="🕒" FontSize="14" VerticalOptions="Center"/>
-                                                                <Label Text="{Binding TiempoMinutos, StringFormat='{0} min'}" FontSize="13" FontAttributes="Bold" TextColor="DodgerBlue" VerticalOptions="Center"/>
+                                                                <Label Text="{Binding TiempoMinutos, StringFormat='{0} min'}" 
+                   FontSize="13" FontAttributes="Bold" 
+                   TextColor="DodgerBlue" VerticalOptions="Center"/>
                                                             </HorizontalStackLayout>
 
-                                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingredientes}" Spacing="4">
+                                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingredientes}" 
+                             IsVisible="{Binding Ingredientes.Count, Converter={StaticResource IntToBoolConverter}}"
+                             Spacing="4">
                                                                 <BindableLayout.ItemTemplate>
                                                                     <DataTemplate>
                                                                         <HorizontalStackLayout Spacing="8">
