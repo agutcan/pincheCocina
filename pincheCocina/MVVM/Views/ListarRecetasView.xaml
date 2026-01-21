@@ -27,7 +27,7 @@
                                BackgroundColor="White">
 
                             <VerticalStackLayout>
-                                <BoxView Color="MediumPurple" HeightRequest="5"/>
+                                <BoxView Color="DodgerBlue" HeightRequest="5"/>
 
                                 <VerticalStackLayout Padding="15" Spacing="12">
                                     <VerticalStackLayout Spacing="2">
@@ -37,7 +37,7 @@
                                                TextColor="#212121" />
                                         <Label Text="{Binding Pasos.Count, StringFormat='{0} pasos detallados'}" 
                                                FontSize="12" 
-                                               TextColor="MediumPurple" 
+                                               TextColor="DodgerBlue" 
                                                FontAttributes="Bold"/>
                                     </VerticalStackLayout>
 
@@ -48,7 +48,7 @@
                                             <DataTemplate>
                                                 <VerticalStackLayout Spacing="8">
                                                     <HorizontalStackLayout Spacing="8">
-                                                        <Label Text="➔" TextColor="MediumPurple" VerticalOptions="Center"/>
+                                                        <Label Text="➔" TextColor="DodgerBlue" VerticalOptions="Center"/>
                                                         <Label Text="{Binding Accion}" 
                                                                FontSize="15" 
                                                                TextColor="#424242"
@@ -70,11 +70,9 @@
                                                                 <Label Text="{Binding TiempoMinutos, StringFormat='{0} minutos aproximadamente'}" 
                                                                        FontSize="13" 
                                                                        FontAttributes="Bold" 
-                                                                       TextColor="MediumPurple" 
+                                                                       TextColor="DodgerBlue" 
                                                                        VerticalOptions="Center"/>
                                                             </HorizontalStackLayout>
-
-                                                            
 
                                                             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingredientes}" 
                                                                                  Spacing="4"
@@ -121,7 +119,7 @@
                 WidthRequest="65"
                 HeightRequest="65"
                 CornerRadius="32"
-                BackgroundColor="MediumPurple" 
+                BackgroundColor="DodgerBlue" 
                 TextColor="White"
                 FontSize="28"
                 HorizontalOptions="End"
