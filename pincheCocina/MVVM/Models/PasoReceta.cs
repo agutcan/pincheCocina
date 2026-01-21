@@ -14,6 +14,9 @@ public class PasoReceta
     public bool AddIngrediente(Ingrediente ingrediente)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 53d43cf1a168a79dfb7c4ce3f080ca8877dab198
         public int Id { get; set; }
 
         // Relación con Receta
@@ -24,9 +27,15 @@ public class PasoReceta
         public PasoReceta() { }
 
         public PasoReceta(string accion_)
+<<<<<<< HEAD
 =======
         if (ingrediente != null)
 >>>>>>> ffdf4cec6159daadb8375bd2f2e66e181a4e5828
+=======
+
+        if (ingrediente != null)
+
+>>>>>>> 53d43cf1a168a79dfb7c4ce3f080ca8877dab198
         {
             Ingredientes.Add(ingrediente);
             return true;
