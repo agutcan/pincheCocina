@@ -1,5 +1,6 @@
 using pincheCocina.MVVM.Models;
 using pincheCocina.MVVM.ViewModels;
+using Microsoft.Maui.Media;
 
 namespace pincheCocina.MVVM.Views;
 
@@ -56,5 +57,44 @@ public partial class ListarRecetasView : ContentPage
         page.RecetaAEditar = receta;
 
         await Navigation.PushAsync(page);
+    }
+
+    private async void OnPasoTapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is PasoReceta paso)
+        {
+            // 1. Construimos el mensaje base
+            string mensajeAVoz = $"Paso: {paso.Accion}. ";
+
+            if (paso.TiempoMinutos > 0)
+            {
+                mensajeAVoz += $"Tiempo estimado: {paso.TiempoMinutos} minutos. ";
+            }
+
+            if (paso.Ingredientes != null && paso.Ingredientes.Count > 0)
+            {
+                mensajeAVoz += "Ingredientes necesarios: ";
+                foreach (var ing in paso.Ingredientes)
+                {
+                    // 2. Aquí hacemos los reemplazos para que las abreviaturas se lean bien
+                    // Reemplazamos "pzas" por "piezas" y "gr" por "gramos"
+                    string unidadLeible = ing.Unidad.ToLower()
+                                            .Replace("pzas", "piezas")
+                                            .Replace("pza", "pieza")
+                                            .Replace("gr", "gramos")
+                                            .Replace("kg", "kilogramos")
+                                            .Replace("ml", "mililitros");
+
+                    mensajeAVoz += $"{ing.Cantidad} {unidadLeible} de {ing.Nombre}. ";
+                }
+            }
+
+            // 3. Ejecutamos la lectura con el texto corregido
+            await TextToSpeech.Default.SpeakAsync(mensajeAVoz, new SpeechOptions
+            {
+                Pitch = 1.0f,
+                Volume = 1.0f
+            });
+        }
     }
 }

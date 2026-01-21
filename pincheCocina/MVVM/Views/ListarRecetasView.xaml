@@ -48,11 +48,14 @@
        Margin="20,0,0,0" 
        CornerRadius="10" 
        HasShadow="False"
-       IsVisible="{Binding ., Converter={StaticResource IntToBoolConverter}}">
+       IsVisible="True">
+                                                        <Frame.GestureRecognizers>
+                                                            <TapGestureRecognizer Tapped="OnPasoTapped" CommandParameter="{Binding .}" />
+                                                        </Frame.GestureRecognizers>
 
                                                         <VerticalStackLayout>
-                                                            <HorizontalStackLayout IsVisible="{Binding TiempoMinutos, Converter={StaticResource IntToBoolConverter}}" 
-                               Spacing="6" Margin="0,0,0,5">
+                                                            <HorizontalStackLayout Spacing="6" Margin="0,0,0,5"
+                               IsVisible="True">
                                                                 <Label Text="🕒" FontSize="14" VerticalOptions="Center"/>
                                                                 <Label Text="{Binding TiempoMinutos, StringFormat='{0} min'}" 
                    FontSize="13" FontAttributes="Bold" 
@@ -60,7 +63,6 @@
                                                             </HorizontalStackLayout>
 
                                                             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingredientes}" 
-                             IsVisible="{Binding Ingredientes.Count, Converter={StaticResource IntToBoolConverter}}"
                              Spacing="4">
                                                                 <BindableLayout.ItemTemplate>
                                                                     <DataTemplate>
