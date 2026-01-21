@@ -6,40 +6,52 @@
              BackgroundColor="#F5F5F5">
 
     <Grid>
-        <CollectionView ItemsSource="{Binding Recetas}" 
-                        SelectionMode="None">
+        <CollectionView ItemsSource="{Binding Recetas}" SelectionMode="None">
             <CollectionView.Header>
-                <Label Text="Explora tus creaciones" 
-                       Padding="20,10" 
-                       FontSize="14" 
-                       TextColor="Gray" 
-                       FontAttributes="Italic"/>
+                <Label Text="Explora tus creaciones" Padding="20,10" FontSize="14" TextColor="Gray" FontAttributes="Italic"/>
             </CollectionView.Header>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Padding="10">
-                        <Frame CornerRadius="15" 
-                               HasShadow="False" 
-                               BorderColor="#E0E0E0" 
-                               Padding="0" 
-                               IsClippedToBounds="True"
-                               BackgroundColor="White">
-
+                        <Frame CornerRadius="15" HasShadow="False" BorderColor="#E0E0E0" Padding="0" IsClippedToBounds="True" BackgroundColor="White">
                             <VerticalStackLayout>
                                 <BoxView Color="DodgerBlue" HeightRequest="5"/>
 
                                 <VerticalStackLayout Padding="15" Spacing="12">
-                                    <VerticalStackLayout Spacing="2">
-                                        <Label Text="{Binding Nombre}" 
-                                               FontSize="22" 
-                                               FontAttributes="Bold" 
-                                               TextColor="#212121" />
-                                        <Label Text="{Binding Pasos.Count, StringFormat='{0} pasos detallados'}" 
-                                               FontSize="12" 
-                                               TextColor="DodgerBlue" 
-                                               FontAttributes="Bold"/>
-                                    </VerticalStackLayout>
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                            <Label Text="{Binding Nombre}" 
+                                                   FontSize="20" 
+                                                   FontAttributes="Bold" 
+                                                   TextColor="#212121" 
+                                                   LineBreakMode="WordWrap"/>
+                                            <Label Text="{Binding Pasos.Count, StringFormat='{0} pasos detallados'}" 
+                                                   FontSize="12" 
+                                                   TextColor="DodgerBlue" 
+                                                   FontAttributes="Bold"/>
+                                        </VerticalStackLayout>
+
+                                        <HorizontalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Start">
+                                            <Button Text="Modificar" 
+                                                    FontSize="10"
+                                                    HeightRequest="30"
+                                                    Padding="8,0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="DodgerBlue"
+                                                    Clicked="OnModificarClicked"
+                                                    CommandParameter="{Binding .}"/>
+
+                                            <Button Text="Eliminar" 
+                                                    FontSize="10"
+                                                    HeightRequest="30"
+                                                    Padding="8,0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="#FF5252"
+                                                    Clicked="OnEliminarClicked"
+                                                    CommandParameter="{Binding .}"/>
+                                        </HorizontalStackLayout>
+                                    </Grid>
 
                                     <BoxView HeightRequest="1" Color="#F0F0F0" Margin="0,5"/>
 
@@ -49,34 +61,17 @@
                                                 <VerticalStackLayout Spacing="8">
                                                     <HorizontalStackLayout Spacing="8">
                                                         <Label Text="➔" TextColor="DodgerBlue" VerticalOptions="Center"/>
-                                                        <Label Text="{Binding Accion}" 
-                                                               FontSize="15" 
-                                                               TextColor="#424242"
-                                                               FontAttributes="Bold"/>
+                                                        <Label Text="{Binding Accion}" FontSize="15" TextColor="#424242" FontAttributes="Bold"/>
                                                     </HorizontalStackLayout>
 
-                                                    <Frame BackgroundColor="#F9F9F9" 
-                                                           BorderColor="Transparent" 
-                                                           Padding="12,10" 
-                                                           Margin="20,0,0,0"
-                                                           CornerRadius="10"
-                                                           HasShadow="False">
+                                                    <Frame BackgroundColor="#F9F9F9" BorderColor="Transparent" Padding="12,10" Margin="20,0,0,0" CornerRadius="10" HasShadow="False">
                                                         <VerticalStackLayout>
-
-                                                            <HorizontalStackLayout IsVisible="{Binding TieneTiempo}" 
-                                                                                   Spacing="6" 
-                                                                                   Margin="0,0,0,5">
+                                                            <HorizontalStackLayout IsVisible="{Binding TieneTiempo}" Spacing="6" Margin="0,0,0,5">
                                                                 <Label Text="🕒" FontSize="14" VerticalOptions="Center"/>
-                                                                <Label Text="{Binding TiempoMinutos, StringFormat='{0} minutos aproximadamente'}" 
-                                                                       FontSize="13" 
-                                                                       FontAttributes="Bold" 
-                                                                       TextColor="DodgerBlue" 
-                                                                       VerticalOptions="Center"/>
+                                                                <Label Text="{Binding TiempoMinutos, StringFormat='{0} min'}" FontSize="13" FontAttributes="Bold" TextColor="DodgerBlue" VerticalOptions="Center"/>
                                                             </HorizontalStackLayout>
 
-                                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingredientes}" 
-                                                                                 Spacing="4"
-                                                                                 Margin="0,5,0,0">
+                                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingredientes}" Spacing="4">
                                                                 <BindableLayout.ItemTemplate>
                                                                     <DataTemplate>
                                                                         <HorizontalStackLayout Spacing="8">
@@ -114,17 +109,6 @@
             </CollectionView.Footer>
         </CollectionView>
 
-        <Button Text="＋"
-                Clicked="Button_Clicked"
-                WidthRequest="65"
-                HeightRequest="65"
-                CornerRadius="32"
-                BackgroundColor="DodgerBlue" 
-                TextColor="White"
-                FontSize="28"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                Margin="25"
-                Shadow="{Shadow Brush=Black, Offset='0,8', Radius=10, Opacity=0.4}"/>
+        <Button Text="＋" Clicked="Button_Clicked" WidthRequest="65" HeightRequest="65" CornerRadius="32" BackgroundColor="DodgerBlue" TextColor="White" FontSize="28" HorizontalOptions="End" VerticalOptions="End" Margin="25" Shadow="{Shadow Brush=Black, Offset='0,8', Radius=10, Opacity=0.4}"/>
     </Grid>
 </ContentPage>

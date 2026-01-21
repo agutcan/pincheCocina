@@ -1,65 +1,117 @@
-using System.Collections.Generic;
+using pincheCocina.MVVM.Models;
+using pincheCocina.Services;
 using System.Globalization;
+using System.ComponentModel;
 
 namespace pincheCocina.MVVM.Views;
 
-public partial class CrearReceta : ContentPage
+public partial class CrearReceta : ContentPage, INotifyPropertyChanged
 {
-
     private ISpeechToText speechToText;
-    private CancellationTokenSource tokenSource = new CancellationTokenSource();
+    private readonly IRecetaService _recetaService;
+    private CancellationTokenSource tokenSource;
 
-    public Command ListenCommand { get; set; }
-    public Command ListenCancelCommand { get; set; }
-    public string RecognitionText { get; set; }
+    // Propiedad para saber si estamos editando
+    public Receta RecetaAEditar { get; set; }
 
-    public CrearReceta(ISpeechToText speechToText)
-	{
+    private string recognitionText;
+    public string RecognitionText
+    {
+        get => recognitionText;
+        set
+        {
+            recognitionText = value;
+            OnPropertyChanged(nameof(RecognitionText));
+        }
+    }
+
+    public CrearReceta(ISpeechToText speechToText, IRecetaService recetaService)
+    {
         InitializeComponent();
-
         this.speechToText = speechToText;
+        _recetaService = recetaService;
 
-        ListenCommand = new Command(Listen);
-        ListenCancelCommand = new Command(ListenCancel);
         BindingContext = this;
     }
 
-    private async void Listen()
+    protected override void OnAppearing()
     {
-        var isAuthorized = await speechToText.RequestPermissions();
-        if (isAuthorized)
-        {
-            try
-            {
-                RecognitionText = await speechToText.Listen(CultureInfo.GetCultureInfo("es-ES"),
-                    new Progress<string>(partialText =>
-                    {
-                        if (DeviceInfo.Platform == DevicePlatform.Android)
-                        {
-                            RecognitionText = partialText;
-                        }
-                        else
-                        {
-                            RecognitionText += partialText + " ";
-                        }
+        base.OnAppearing();
 
-                        OnPropertyChanged(nameof(RecognitionText));
-                    }), tokenSource.Token);
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", ex.Message, "OK");
-            }
+        // Si la propiedad RecetaAEditar tiene datos, es que venimos de "Modificar"
+        if (RecetaAEditar != null)
+        {
+            Title = "Modificar Receta";
+            txtNombre.Text = RecetaAEditar.Nombre;
+            // Si tuvieras un campo de texto para pasos, aquí lo rellenarías
         }
         else
         {
-            await DisplayAlert("Permission Error", "No microphone access", "OK");
+            Title = "Nueva Receta";
+            txtNombre.Text = string.Empty;
+            RecognitionText = string.Empty;
         }
     }
 
-    private void ListenCancel()
+    private async void OnGuardarClicked(object sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(txtNombre.Text))
+        {
+            await DisplayAlert("Atención", "Escribe un nombre para la receta", "OK");
+            return;
+        }
+
+        try
+        {
+            if (RecetaAEditar == null)
+            {
+                // MODO CREAR
+                var nuevaReceta = new Receta { Nombre = txtNombre.Text };
+                await _recetaService.AddRecetaAsync(nuevaReceta);
+            }
+            else
+            {
+                // MODO MODIFICAR
+                RecetaAEditar.Nombre = txtNombre.Text;
+                await _recetaService.UpdateRecetaAsync(RecetaAEditar);
+            }
+
+            await Navigation.PopAsync(); // Regresar a la lista
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", "No se pudo guardar: " + ex.Message, "OK");
+        }
+    }
+
+    private async void OnListenClicked(object sender, EventArgs e)
+    {
+        var isAuthorized = await speechToText.RequestPermissions();
+        if (!isAuthorized)
+        {
+            await DisplayAlert("Permiso denegado", "No se puede acceder al micrófono", "OK");
+            return;
+        }
+
+        tokenSource = new CancellationTokenSource();
+        RecognitionText = "Escuchando...";
+
+        try
+        {
+            RecognitionText = await speechToText.Listen(CultureInfo.GetCultureInfo("es-ES"),
+                new Progress<string>(partialText =>
+                {
+                    RecognitionText = partialText;
+                }), tokenSource.Token);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", ex.Message, "OK");
+        }
+    }
+
+    private void OnCancelListenClicked(object sender, EventArgs e)
     {
         tokenSource?.Cancel();
     }
-
 }

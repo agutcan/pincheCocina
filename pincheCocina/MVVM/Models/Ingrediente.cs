@@ -12,9 +12,9 @@ public class Ingrediente
 
     // Relación con PasoReceta
     public int PasoRecetaId { get; set; }
-    public string Nombre { get; set; }
+    public string Nombre { get; set; } = string.Empty;
     public Double Cantidad { get; set; } // ej: 2, 100
-    public string Unidad { get; set; }    // ej: "g", "ml", "unidad"
+    public string Unidad { get; set; } = string.Empty;    // ej: "g", "ml", "unidad"
 
     public Ingrediente() { }
 

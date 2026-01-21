@@ -2,27 +2,69 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="pincheCocina.MVVM.Views.CrearReceta"
-             Title="CrearReceta">
-    <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
+             Title="Gestionar Receta"
+             BackgroundColor="White">
 
-            <Label
-                Text="{Binding RecognitionText}"
-                FontSize="18"
-                HorizontalOptions="Center" />
+    <ScrollView Padding="20">
+        <VerticalStackLayout Spacing="20">
 
-            <Button
-                Text="Listen"
-                Command="{Binding ListenCommand}"
-                HorizontalOptions="Center" />
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Nombre de la Receta" 
+                       FontAttributes="Bold" 
+                       FontSize="16" 
+                       TextColor="DodgerBlue"/>
+                <Frame Padding="10,2" BorderColor="#E0E0E0" CornerRadius="10" HasShadow="False">
+                    <Entry x:Name="txtNombre" 
+                           Placeholder="Ej: Paella Valenciana" 
+                           FontSize="18"/>
+                </Frame>
+            </VerticalStackLayout>
 
-            <Button
-                Text="Listen Cancel"
-                Command="{Binding ListenCancelCommand}"
-                HorizontalOptions="Center" />
+            <BoxView HeightRequest="1" Color="#F0F0F0" Margin="0,10"/>
+
+            <Label Text="Dictar Pasos e Ingredientes" 
+                   FontAttributes="Bold" 
+                   FontSize="16" 
+                   TextColor="DodgerBlue"/>
+
+            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                <Button Grid.Column="0"
+                        Text="🎙️ Iniciar Dictado" 
+                        Clicked="OnListenClicked"
+                        BackgroundColor="DodgerBlue" 
+                        TextColor="White"
+                        CornerRadius="10"
+                        FontAttributes="Bold"/>
+
+                <Button Grid.Column="1"
+                        Text="🛑" 
+                        Clicked="OnCancelListenClicked"
+                        BackgroundColor="#FF5252" 
+                        TextColor="White"
+                        WidthRequest="50"
+                        CornerRadius="10"/>
+            </Grid>
+
+            <Frame BackgroundColor="#F9F9F9" 
+                   BorderColor="#E0E0E0" 
+                   HasShadow="False" 
+                   CornerRadius="10" 
+                   MinimumHeightRequest="150">
+                <Label x:Name="lblRecognitionText" 
+                       Text="{Binding RecognitionText}" 
+                       TextColor="#424242"
+                       FontSize="15" />
+            </Frame>
+
+            <Button Text="💾 Guardar Receta" 
+                    Clicked="OnGuardarClicked"
+                    BackgroundColor="#2ECC71"
+                    TextColor="White"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    HeightRequest="60"
+                    CornerRadius="15"
+                    Margin="0,20,0,0"/>
 
         </VerticalStackLayout>
     </ScrollView>

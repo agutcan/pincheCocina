@@ -8,7 +8,7 @@ namespace pincheCocina.MVVM.Models;
 [AddINotifyPropertyChangedInterface]
 public class PasoReceta
 {
-    public string Accion { get; set; }
+    public string Accion { get; set; } = string.Empty;
     public List<Ingrediente> Ingredientes { get; set; } = new();
 
     public int Id { get; set; }

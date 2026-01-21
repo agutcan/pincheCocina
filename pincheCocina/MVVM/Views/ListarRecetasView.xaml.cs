@@ -1,35 +1,60 @@
+using pincheCocina.MVVM.Models;
 using pincheCocina.MVVM.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace pincheCocina.MVVM.Views;
 
 public partial class ListarRecetasView : ContentPage
 {
-    // Recibimos el ViewModel por Inyección de Dependencias
-    public ListarRecetasView(ListarRecetaViewModel vm)
+    private readonly ListarRecetaViewModel _viewModel;
+
+    public ListarRecetasView(ListarRecetaViewModel viewModel)
     {
         InitializeComponent();
-
-        // Asignamos el ViewModel unificado
-        BindingContext = vm;
+        _viewModel = viewModel;
+        BindingContext = _viewModel;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        // Obtenemos el ViewModel y recargamos los datos
-        if (BindingContext is ListarRecetaViewModel vm)
-        {
-            vm.CargarRecetas();
-        }
+        await _viewModel.CargarRecetasAsync();
     }
 
     private async void Button_Clicked(object sender, EventArgs e)
     {
-        // Usamos la lógica de navegación que tenías en la primera vista
-        // Esto asume que tienes configurado App.Services en tu App.xaml.cs
         var page = App.Services.GetRequiredService<CrearReceta>();
+        await Navigation.PushAsync(page);
+    }
+
+    private async void OnEliminarClicked(object sender, EventArgs e)
+    {
+        var button = sender as Button;
+        var receta = button?.CommandParameter as Receta;
+
+        if (receta == null) return;
+
+        bool answer = await DisplayAlert("Eliminar Receta", $"¿Estás seguro de que quieres borrar '{receta.Nombre}'?", "Sí", "No");
+
+        if (answer)
+        {
+            await _viewModel.EliminarRecetaAsync(receta.Id);
+            await _viewModel.CargarRecetasAsync();
+        }
+    }
+
+    private async void OnModificarClicked(object sender, EventArgs e)
+    {
+        var button = sender as Button;
+        var receta = button?.CommandParameter as Receta;
+
+        if (receta == null) return;
+
+        // Pedimos la página al contenedor de servicios
+        var page = App.Services.GetRequiredService<CrearReceta>();
+
+        // Le pasamos la receta a editar
+        page.RecetaAEditar = receta;
+
         await Navigation.PushAsync(page);
     }
 }

@@ -1,40 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore;
-using pincheCocina.Data;
+﻿using System.Collections.ObjectModel;
 using pincheCocina.MVVM.Models;
-using System.Collections.ObjectModel;
+using pincheCocina.Services;
 
 namespace pincheCocina.MVVM.ViewModels
 {
     public class ListarRecetaViewModel
     {
-        private readonly AppDbContext _context;
-        public ObservableCollection<Receta> Recetas { get; set; }
+        private readonly IRecetaService _recetaService;
+        public ObservableCollection<Receta> Recetas { get; set; } = new();
 
-        // El constructor ahora recibe el AppDbContext automáticamente gracias a MauiProgram
-        public ListarRecetaViewModel(AppDbContext context)
+        public ListarRecetaViewModel(IRecetaService recetaService)
         {
-            _context = context;
-            Recetas = new ObservableCollection<Receta>();
-
-            // Cargamos los datos
-            CargarRecetas();
+            _recetaService = recetaService;
         }
 
-        public void CargarRecetas()
+        public async Task CargarRecetasAsync()
         {
-            // Limpiamos la lista actual
+            var lista = await _recetaService.GetRecetasAsync();
             Recetas.Clear();
-
-            // Consultamos la base de datos incluyendo hijos y nietos
-            var recetasDb = _context.Recetas
-                .Include(r => r.Pasos) // Carga los pasos
-                    .ThenInclude(p => p.Ingredientes) // Carga los ingredientes de cada paso
-                .ToList();
-
-            foreach (var receta in recetasDb)
+            foreach (var receta in lista)
             {
                 Recetas.Add(receta);
             }
+        }
+        public async Task EliminarRecetaAsync(int id)
+        {
+            await _recetaService.DeleteRecetaAsync(id);
         }
     }
 }
