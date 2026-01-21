@@ -1,67 +1,40 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using pincheCocina.Data;
 using pincheCocina.MVVM.Models;
+using System.Collections.ObjectModel;
 
 namespace pincheCocina.MVVM.ViewModels
 {
     public class ListarRecetaViewModel
     {
-        // Usamos "Recetas" para que coincida con el Binding de la vista
+        private readonly AppDbContext _context;
         public ObservableCollection<Receta> Recetas { get; set; }
 
-        public ListarRecetaViewModel()
+        // El constructor ahora recibe el AppDbContext automáticamente gracias a MauiProgram
+        public ListarRecetaViewModel(AppDbContext context)
         {
-            Recetas = new ObservableCollection<Receta>
+            _context = context;
+            Recetas = new ObservableCollection<Receta>();
+
+            // Cargamos los datos
+            CargarRecetas();
+        }
+
+        public void CargarRecetas()
+        {
+            // Limpiamos la lista actual
+            Recetas.Clear();
+
+            // Consultamos la base de datos incluyendo hijos y nietos
+            var recetasDb = _context.Recetas
+                .Include(r => r.Pasos) // Carga los pasos
+                    .ThenInclude(p => p.Ingredientes) // Carga los ingredientes de cada paso
+                .ToList();
+
+            foreach (var receta in recetasDb)
             {
-                // Combinación de los datos de ambos ViewModels
-                new Receta
-                {
-                    Nombre = "Tacos de Pollo",
-                    Pasos = new List<PasoReceta>
-                    {
-                        new PasoReceta {
-                            Accion = "Cocinar el pollo",
-                            Ingredientes = new List<Ingrediente> {
-                                new Ingrediente { Nombre="Pollo", Cantidad="500", Unidad="gr" }
-                            }
-                        }
-                    }
-                },
-                new Receta("Tacos al Pastor")
-                {
-                    Pasos = new List<PasoReceta>
-                    {
-                        new PasoReceta {
-                            Accion = "Marinar carne",
-                            Ingredientes = new List<Ingrediente> {
-                                new Ingrediente { Nombre="Cerdo", Cantidad="1", Unidad="kg" },
-                                new Ingrediente { Nombre="Achiote", Cantidad="50", Unidad="gr" }
-                            }
-                        },
-                        new PasoReceta("Asar", 30)
-                    }
-                },
-                new Receta("Ensalada César")
-                {
-                    Pasos = new List<PasoReceta>
-                    {
-                        new PasoReceta {
-                            Accion = "Cortar lechuga",
-                            Ingredientes = new List<Ingrediente> {
-                                new Ingrediente { Nombre="Lechuga Orejona", Cantidad="1", Unidad="pza" }
-                            }
-                        }
-                    }
-                },
-                new Receta("Pizza Casera")
-                {
-                    Pasos = new List<PasoReceta>
-                    {
-                        new PasoReceta("Preparar masa", 20),
-                        new PasoReceta("Hornear", 40)
-                    }
-                }
-            };
+                Recetas.Add(receta);
+            }
         }
     }
 }

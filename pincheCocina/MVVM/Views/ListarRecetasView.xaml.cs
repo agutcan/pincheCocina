@@ -14,6 +14,17 @@ public partial class ListarRecetasView : ContentPage
         BindingContext = vm;
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        // Obtenemos el ViewModel y recargamos los datos
+        if (BindingContext is ListarRecetaViewModel vm)
+        {
+            vm.CargarRecetas();
+        }
+    }
+
     private async void Button_Clicked(object sender, EventArgs e)
     {
         // Usamos la lógica de navegación que tenías en la primera vista
