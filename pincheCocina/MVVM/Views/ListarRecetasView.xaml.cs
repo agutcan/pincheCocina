@@ -61,40 +61,52 @@ public partial class ListarRecetasView : ContentPage
 
     private async void OnPasoTapped(object sender, TappedEventArgs e)
     {
-        if (e.Parameter is PasoReceta paso)
+        if (e.Parameter is not PasoReceta paso) return;
+
+        try
         {
-            // 1. Construimos el mensaje base
-            string mensajeAVoz = $"Paso: {paso.Accion}. ";
+            // Usamos StringBuilder para mayor eficiencia si el texto es largo
+            var sb = new System.Text.StringBuilder();
+
+            sb.Append($"Paso: {paso.Accion}. ");
 
             if (paso.TiempoMinutos > 0)
             {
-                mensajeAVoz += $"Tiempo estimado: {paso.TiempoMinutos} minutos. ";
+                sb.Append($"Tiempo estimado: {paso.TiempoMinutos} minutos. ");
             }
 
             if (paso.Ingredientes != null && paso.Ingredientes.Count > 0)
             {
-                mensajeAVoz += "Ingredientes necesarios: ";
+                sb.Append("Ingredientes necesarios: ");
                 foreach (var ing in paso.Ingredientes)
                 {
-                    // 2. Aquí hacemos los reemplazos para que las abreviaturas se lean bien
-                    // Reemplazamos "pzas" por "piezas" y "gr" por "gramos"
-                    string unidadLeible = ing.Unidad.ToLower()
-                                            .Replace("pzas", "piezas")
-                                            .Replace("pza", "pieza")
-                                            .Replace("gr", "gramos")
-                                            .Replace("kg", "kilogramos")
-                                            .Replace("ml", "mililitros");
+                    // Manejamos el reemplazo de forma segura si Unidad es nulo
+                    string unidadOriginal = ing.Unidad?.ToLower() ?? "";
 
-                    mensajeAVoz += $"{ing.Cantidad} {unidadLeible} de {ing.Nombre}. ";
+                    string unidadLeible = unidadOriginal
+                        .Replace("pzas", "piezas")
+                        .Replace("pza", "pieza")
+                        .Replace("gr", "gramos")
+                        .Replace("g", "gramos")
+                        .Replace("kg", "kilogramos")
+                        .Replace("ml", "mililitros")
+                        .Replace("l", "litros");
+
+                    sb.Append($"{ing.Cantidad} {unidadLeible} de {ing.Nombre}. ");
                 }
             }
 
-            // 3. Ejecutamos la lectura con el texto corregido
-            await TextToSpeech.Default.SpeakAsync(mensajeAVoz, new SpeechOptions
+            // Cancelamos cualquier lectura anterior antes de empezar una nueva
+            TextToSpeech.Default.SpeakAsync(sb.ToString(), new SpeechOptions
             {
                 Pitch = 1.0f,
                 Volume = 1.0f
             });
+        }
+        catch (Exception ex)
+        {
+            // Si falla el motor de voz (ej. en simuladores), al menos la app no se cierra
+            System.Diagnostics.Debug.WriteLine($"Error TTS: {ex.Message}");
         }
     }
 }

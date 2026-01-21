@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:pincheCocina.Resources.Converters"
              x:Class="pincheCocina.MVVM.Views.ListarRecetasView"
              Title="Mis Recetas"
              BackgroundColor="#F5F5F5">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid>
         <CollectionView ItemsSource="{Binding Recetas}" SelectionMode="None">
@@ -37,33 +44,35 @@
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate>
                                                 <VerticalStackLayout Spacing="8">
+                                                    <VerticalStackLayout.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnPasoTapped" CommandParameter="{Binding .}" />
+                                                    </VerticalStackLayout.GestureRecognizers>
+
                                                     <HorizontalStackLayout Spacing="8">
                                                         <Label Text="➔" TextColor="DodgerBlue" VerticalOptions="Center"/>
                                                         <Label Text="{Binding Accion}" FontSize="15" TextColor="#424242" FontAttributes="Bold"/>
                                                     </HorizontalStackLayout>
 
                                                     <Frame BackgroundColor="#F9F9F9" 
-       BorderColor="Transparent" 
-       Padding="12,10" 
-       Margin="20,0,0,0" 
-       CornerRadius="10" 
-       HasShadow="False"
-       IsVisible="True">
-                                                        <Frame.GestureRecognizers>
-                                                            <TapGestureRecognizer Tapped="OnPasoTapped" CommandParameter="{Binding .}" />
-                                                        </Frame.GestureRecognizers>
+                                                           BorderColor="Transparent" 
+                                                           Padding="12,10" 
+                                                           Margin="20,0,0,0" 
+                                                           CornerRadius="10" 
+                                                           HasShadow="False"
+                                                           IsVisible="{Binding ., Converter={StaticResource IntToBoolConverter}}">
 
                                                         <VerticalStackLayout>
                                                             <HorizontalStackLayout Spacing="6" Margin="0,0,0,5"
-                               IsVisible="True">
+                                                                                   IsVisible="{Binding TiempoMinutos, Converter={StaticResource IntToBoolConverter}}">
                                                                 <Label Text="🕒" FontSize="14" VerticalOptions="Center"/>
                                                                 <Label Text="{Binding TiempoMinutos, StringFormat='{0} min'}" 
-                   FontSize="13" FontAttributes="Bold" 
-                   TextColor="DodgerBlue" VerticalOptions="Center"/>
+                                                                       FontSize="13" FontAttributes="Bold" 
+                                                                       TextColor="DodgerBlue" VerticalOptions="Center"/>
                                                             </HorizontalStackLayout>
 
                                                             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingredientes}" 
-                             Spacing="4">
+                                                                                 Spacing="4"
+                                                                                 IsVisible="{Binding Ingredientes, Converter={StaticResource IntToBoolConverter}}">
                                                                 <BindableLayout.ItemTemplate>
                                                                     <DataTemplate>
                                                                         <HorizontalStackLayout Spacing="8">
@@ -101,6 +110,12 @@
             </CollectionView.Footer>
         </CollectionView>
 
-        <Button Text="＋" Clicked="Button_Clicked" WidthRequest="65" HeightRequest="65" CornerRadius="32" BackgroundColor="DodgerBlue" TextColor="White" FontSize="28" HorizontalOptions="End" VerticalOptions="End" Margin="25" Shadow="{Shadow Brush=Black, Offset='0,8', Radius=10, Opacity=0.4}"/>
+        <Button Text="＋" Clicked="Button_Clicked" 
+                WidthRequest="65" HeightRequest="65" 
+                CornerRadius="32" BackgroundColor="DodgerBlue" 
+                TextColor="White" FontSize="28" 
+                HorizontalOptions="End" VerticalOptions="End" 
+                Margin="25" 
+                Shadow="{Shadow Brush=Black, Offset='0,8', Radius=10, Opacity=0.4}"/>
     </Grid>
 </ContentPage>
