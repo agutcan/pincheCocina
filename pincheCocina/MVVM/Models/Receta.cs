@@ -6,8 +6,11 @@ namespace pincheCocina.MVVM.Models
 {
     public class Receta
     {
+        public int Id { get; set; } // Clave primaria
         public string Nombre { get; set; }
         public List<PasoReceta> Pasos { get; set; } = new();
+
+        public Receta() { }
 
         public Receta(string nombre_)
         {

@@ -6,8 +6,14 @@ namespace pincheCocina.MVVM.Models
 {
     public class PasoReceta
     {
+        public int Id { get; set; }
+
+        // Relación con Receta
+        public int RecetaId { get; set; }
         public string Accion { get; set; }
         public List<Ingrediente> Ingredientes { get; set; } = new();
+
+        public PasoReceta() { }
 
         public PasoReceta(string accion_)
         {

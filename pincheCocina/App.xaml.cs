@@ -1,17 +1,19 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace pincheCocina
+﻿namespace pincheCocina
 {
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
+
+            // Esto define la página de inicio envuelta en navegación clásica
+            MainPage = new NavigationPage(new MainPage());
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            // IMPORTANTE: Aquí debemos retornar la MainPage que ya definimos
+            return new Window(MainPage);
         }
     }
 }

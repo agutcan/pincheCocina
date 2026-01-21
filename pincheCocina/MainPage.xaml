@@ -31,6 +31,12 @@
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Fill" />
         </VerticalStackLayout>
+        <Button
+        Text="Ver Mis Recetas"
+        Clicked="OnGoToListClicked"
+        HorizontalOptions="Center"
+        Margin="0,20,0,0" />
+        
     </ScrollView>
 
 </ContentPage>
