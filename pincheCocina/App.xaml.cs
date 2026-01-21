@@ -1,19 +1,25 @@
-﻿namespace pincheCocina
+﻿using Microsoft.Extensions.DependencyInjection;
+using pincheCocina.MVVM.ViewModels;
+using pincheCocina.MVVM.Views;
+
+namespace pincheCocina
 {
     public partial class App : Application
     {
-        public App()
+
+        public static IServiceProvider Services { get; private set; }
+
+        public App(IServiceProvider services)
         {
             InitializeComponent();
 
-            // Esto define la página de inicio envuelta en navegación clásica
-            MainPage = new NavigationPage(new MainPage());
+            Services = services;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
             // IMPORTANTE: Aquí debemos retornar la MainPage que ya definimos
-            return new Window(MainPage);
+            return new Window(new NavigationPage(new RecetasView(new RecetasViewModel())));
         }
     }
 }

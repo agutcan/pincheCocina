@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using PropertyChanged;
 
-namespace pincheCocina.MVVM.Models
+namespace pincheCocina.MVVM.Models;
+
+[AddINotifyPropertyChangedInterface]
+public class PasoReceta
 {
-    public class PasoReceta
+    public string Accion { get; set; }
+    public List<Ingrediente> Ingredientes { get; set; } = new();
+
+    public bool AddIngrediente(Ingrediente ingrediente)
     {
         public int Id { get; set; }
 
@@ -16,34 +23,25 @@ namespace pincheCocina.MVVM.Models
         public PasoReceta() { }
 
         public PasoReceta(string accion_)
-        {
-            Accion = accion_;
-        }
 
-        public bool AddAccion(string accion_)
-        {
-            if (accion_ != null)
-            {
-                Accion = accion_;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        if (ingrediente != null)
 
-        public bool addIngrediente(Ingrediente ingrediente)
         {
-            if (ingrediente != null)
-            {
-                Ingredientes.Add(ingrediente);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            Ingredientes.Add(ingrediente);
+            return true;
         }
+        else
+            return false;
+        
     }
+
+    public bool RemoveIngrediente(Ingrediente ingrediente)
+    {
+        return (ingrediente != null) ? Ingredientes.Remove(ingrediente) : false;
+    }
+
+        
+    
+
+    
 }
