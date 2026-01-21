@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using pincheCocina.Data;
 using pincheCocina.MVVM.Models;
 using pincheCocina.MVVM.Views;
+using pincheCocina.MVVM.ViewModels; // Asegúrate de tener este using
 
 #if WINDOWS
 using pincheCocina.Platforms;
@@ -22,23 +23,29 @@ namespace pincheCocina
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-            // 1. Definir el nombre del archivo de la base de datos
-            string nombreBaseDatos = "cocina.db3";
 
-            // 2. Crear la ruta completa usando la carpeta de datos de la app
+            string nombreBaseDatos = "cocina.db3";
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, nombreBaseDatos);
 
-            // 3. Registrar el DbContext con la ruta generada
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite($"Data Source={dbPath}"));
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
 
+            // --- REGISTRO DE VISTAS Y VIEWMODELS ---
+
+            // Registramos el ViewModel
+            builder.Services.AddTransient<ListarRecetaViewModel>();
+
+            // Registramos las Vistas
+            builder.Services.AddTransient<ListarRecetasView>();
             builder.Services.AddTransient<CrearReceta>();
 
-#if WINDOWS
+            // ---------------------------------------
 
+#if WINDOWS
             builder.Services.AddSingleton<ISpeechToText, SpeechToTextImplementation>();
 #endif
 

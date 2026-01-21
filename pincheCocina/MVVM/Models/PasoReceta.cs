@@ -11,19 +11,25 @@ public class PasoReceta
     public string Accion { get; set; }
     public List<Ingrediente> Ingredientes { get; set; } = new();
 
-    public bool AddIngrediente(Ingrediente ingrediente)
+    public int Id { get; set; }
+
+    // Relación con Receta
+    public int RecetaId { get; set; }
+
+    public int? TiempoMinutos { get; set; } // Propiedad nueva
+
+    // Propiedad calculada para la vista
+    public bool TieneTiempo => TiempoMinutos.HasValue && TiempoMinutos > 0;
+
+    public PasoReceta() { }
+
+    public PasoReceta(string accion, int tiempo)
     {
-        public int Id { get; set; }
+        Accion = accion;
+        TiempoMinutos = tiempo;
+    }
 
-        // Relación con Receta
-        public int RecetaId { get; set; }
-        public string Accion { get; set; }
-        public List<Ingrediente> Ingredientes { get; set; } = new();
-
-        public PasoReceta() { }
-
-        public PasoReceta(string accion_)
-
+    public bool AddIngrediente(Ingrediente ingrediente) {
         if (ingrediente != null)
 
         {
@@ -32,7 +38,6 @@ public class PasoReceta
         }
         else
             return false;
-        
     }
 
     public bool RemoveIngrediente(Ingrediente ingrediente)
@@ -40,8 +45,4 @@ public class PasoReceta
         return (ingrediente != null) ? Ingredientes.Remove(ingrediente) : false;
     }
 
-        
-    
-
-    
 }

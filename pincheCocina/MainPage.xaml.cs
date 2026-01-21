@@ -24,9 +24,9 @@ namespace pincheCocina
         }
         private async void OnGoToListClicked(object sender, EventArgs e)
         {
-            // Creamos la instancia de la página manualmente
-            // Nota: Como no usas base de datos ahora, podemos hacer "new"
-            var paginaListar = new ListarRecetasView();
+            // EN LUGAR DE: var paginaListar = new ListarRecetasView();
+            // USAMOS EL CONTENEDOR DE SERVICIOS:
+            var paginaListar = App.Services.GetRequiredService<ListarRecetasView>();
 
             // Navegamos usando el Stack de navegación
             await Navigation.PushAsync(paginaListar);
