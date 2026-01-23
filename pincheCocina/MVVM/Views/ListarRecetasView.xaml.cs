@@ -23,13 +23,8 @@ public partial class ListarRecetasView : ContentPage
 
     private async void Button_Clicked(object sender, EventArgs e)
     {
-        // 1. Pedimos la página de creación
         var page = App.Services.GetRequiredService<CrearReceta>();
-
-        // 2. Le pasamos el modo que tenemos guardado en el ViewModel de esta lista
         page.ModoSeleccionado = _viewModel.ModoSeleccionado;
-
-        // 3. Navegamos
         await Navigation.PushAsync(page);
     }
 
@@ -58,14 +53,10 @@ public partial class ListarRecetasView : ContentPage
 
             if (receta == null) return;
 
-            // Obtenemos la página
             var page = App.Services.GetRequiredService<CrearReceta>();
-
-            // ASIGNACIÓN CRÍTICA: Primero pasamos los datos
             page.ModoSeleccionado = _viewModel.ModoSeleccionado;
             page.RecetaAEditar = receta;
 
-            // Navegamos
             await Navigation.PushAsync(page);
         }
         catch (Exception ex)
@@ -80,39 +71,11 @@ public partial class ListarRecetasView : ContentPage
 
         try
         {
-            // Usamos StringBuilder para mayor eficiencia si el texto es largo
-            var sb = new System.Text.StringBuilder();
+            // El ViewModel construye el string
+            string textoParaHablar = _viewModel.ObtenerTextoLecturaPaso(paso);
 
-            sb.Append($"Paso: {paso.Accion}. ");
-
-            if (paso.TiempoMinutos > 0)
-            {
-                sb.Append($"Tiempo estimado: {paso.TiempoMinutos} minutos. ");
-            }
-
-            if (paso.Ingredientes != null && paso.Ingredientes.Count > 0)
-            {
-                sb.Append("Ingredientes necesarios: ");
-                foreach (var ing in paso.Ingredientes)
-                {
-                    // Manejamos el reemplazo de forma segura si Unidad es nulo
-                    string unidadOriginal = ing.Unidad?.ToLower() ?? "";
-
-                    string unidadLeible = unidadOriginal
-                        .Replace("pzas", "piezas")
-                        .Replace("pza", "pieza")
-                        .Replace("gr", "gramos")
-                        .Replace("g", "gramos")
-                        .Replace("kg", "kilogramos")
-                        .Replace("ml", "mililitros")
-                        .Replace("l", "litros");
-
-                    sb.Append($"{ing.Cantidad} {unidadLeible} de {ing.Nombre}. ");
-                }
-            }
-
-            // Cancelamos cualquier lectura anterior antes de empezar una nueva
-            TextToSpeech.Default.SpeakAsync(sb.ToString(), new SpeechOptions
+            // La View ejecuta la acción de voz
+            await TextToSpeech.Default.SpeakAsync(textoParaHablar, new SpeechOptions
             {
                 Pitch = 1.0f,
                 Volume = 1.0f
@@ -120,7 +83,6 @@ public partial class ListarRecetasView : ContentPage
         }
         catch (Exception ex)
         {
-            // Si falla el motor de voz (ej. en simuladores), al menos la app no se cierra
             System.Diagnostics.Debug.WriteLine($"Error TTS: {ex.Message}");
         }
     }
