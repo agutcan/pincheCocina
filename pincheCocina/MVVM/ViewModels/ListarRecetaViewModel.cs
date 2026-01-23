@@ -7,6 +7,7 @@ namespace pincheCocina.MVVM.ViewModels
     public class ListarRecetaViewModel
     {
         private readonly IRecetaService _recetaService;
+        public string ModoSeleccionado { get; set; }
         public ObservableCollection<Receta> Recetas { get; set; } = new();
 
         public ListarRecetaViewModel(IRecetaService recetaService)

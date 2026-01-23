@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using pincheCocina.MVVM.ViewModels;
 using pincheCocina.MVVM.Views;
 
 namespace pincheCocina
@@ -18,9 +17,9 @@ namespace pincheCocina
         {
             // Resolvemos la vista unificada desde el contenedor de servicios
             // Esto inyectará automáticamente el ViewModel registrado
-            var mainPage = Services.GetRequiredService<ListarRecetasView>();
+            var inicioPage = Services.GetRequiredService<InicioView>();
 
-            return new Window(new NavigationPage(mainPage));
+            return new Window(new NavigationPage(inicioPage));
         }
     }
 }
