@@ -3,6 +3,7 @@ using pincheCocina.Services;
 using System.Globalization;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
 
 namespace pincheCocina.MVVM.Views;
 
@@ -11,6 +12,9 @@ public partial class CrearReceta : ContentPage, INotifyPropertyChanged
     private readonly ISpeechToText _speechToText;
     private readonly IRecetaService _recetaService;
     private CancellationTokenSource _tokenSource;
+
+    // Esta es la lista que el XAML observará para pintar los pasos al instante
+    public ObservableCollection<PasoReceta> PasosVisuales { get; set; } = new();
 
     public Receta RecetaAEditar { get; set; }
 
@@ -28,6 +32,13 @@ public partial class CrearReceta : ContentPage, INotifyPropertyChanged
         set { _estaEscuchando = value; OnPropertyChanged(nameof(EstaEscuchando)); }
     }
 
+    private string _modoSeleccionado;
+    public string ModoSeleccionado
+    {
+        get => _modoSeleccionado;
+        set { _modoSeleccionado = value; OnPropertyChanged(nameof(ModoSeleccionado)); }
+    }
+
     public CrearReceta(ISpeechToText speechToText, IRecetaService recetaService)
     {
         InitializeComponent();
@@ -39,21 +50,51 @@ public partial class CrearReceta : ContentPage, INotifyPropertyChanged
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
         if (RecetaAEditar != null)
         {
-            // Modo Edición
+            // Modo Edición: Cargamos datos existentes
             txtNombre.Text = RecetaAEditar.Nombre;
-            // Aseguramos que la lista de pasos no sea nula
             if (RecetaAEditar.Pasos == null) RecetaAEditar.Pasos = new List<PasoReceta>();
+
+            // Sincronizamos la lista visual con los pasos de la receta
+            PasosVisuales.Clear();
+            foreach (var paso in RecetaAEditar.Pasos)
+            {
+                PasosVisuales.Add(paso);
+            }
         }
         else
         {
-            // Modo Nuevo
+            // Modo Nuevo: Limpiamos todo
             RecetaAEditar = new Receta { Pasos = new List<PasoReceta>() };
             txtNombre.Text = string.Empty;
+            PasosVisuales.Clear();
         }
     }
 
+    // --- LÓGICA MODO MANUAL ---
+    private void OnAnadirPasoManualClicked(object sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(txtAccionManual.Text)) return;
+
+        var nuevoPaso = new PasoReceta
+        {
+            Accion = txtAccionManual.Text.FirstCharToUpper(),
+            TiempoMinutos = int.TryParse(txtTiempoManual.Text, out int t) ? t : 0,
+            Ingredientes = new List<Ingrediente>()
+        };
+
+        // Al añadir a la ObservableCollection, el XAML se actualiza solo sin petar
+        PasosVisuales.Add(nuevoPaso);
+
+        txtAccionManual.Text = string.Empty;
+        txtTiempoManual.Text = string.Empty;
+
+        lblRecognitionText.Text = $"Pasos en la lista: {PasosVisuales.Count}";
+    }
+
+    // --- LÓGICA MODO VOZ ---
     private async void OnListenClicked(object sender, EventArgs e)
     {
         try
@@ -77,16 +118,10 @@ public partial class CrearReceta : ContentPage, INotifyPropertyChanged
         finally { EstaEscuchando = false; }
     }
 
-    // Ejemplos que funcionan: 
-    // Poner a hervir 2 litros de agua luego añadir 500 gramos de macarrones y cocinar por 10 minutos y por último escurrir y servir.
-    // Mezclar 250 g de harina con 2 piezas de huevo después añadir 100 g de mantequilla y batir por 5 minutos
-    // Añadir 250 ml de leche y 1 l de caldo siguiente paso cocinar a fuego lento por 15 minutos
-
     private void ProcesarTextoDictado(string texto)
     {
         if (string.IsNullOrWhiteSpace(texto)) return;
 
-        // 1. Normalización (dos -> 2, etc.)
         string textoNormalizado = texto.ToLower()
             .Replace(" dos ", " 2 ")
             .Replace(" un ", " 1 ")
@@ -100,7 +135,6 @@ public partial class CrearReceta : ContentPage, INotifyPropertyChanged
             textoMarcado = textoMarcado.Replace(sep, "|", StringComparison.OrdinalIgnoreCase);
 
         textoMarcado = textoMarcado.Replace("añadir", "|añadir", StringComparison.OrdinalIgnoreCase);
-
         var partes = textoMarcado.Split('|', StringSplitOptions.RemoveEmptyEntries);
 
         foreach (var parte in partes)
@@ -114,7 +148,6 @@ public partial class CrearReceta : ContentPage, INotifyPropertyChanged
                 Ingredientes = new List<Ingrediente>()
             };
 
-            // 2. Extracción de Tiempo
             var matchTiempo = Regex.Match(pasoLimpio, @"(\d+)\s*(minutos|min|hora|horas)", RegexOptions.IgnoreCase);
             if (matchTiempo.Success)
             {
@@ -122,78 +155,37 @@ public partial class CrearReceta : ContentPage, INotifyPropertyChanged
                 nuevoPaso.TiempoMinutos = matchTiempo.Groups[2].Value.Contains("hora") ? valor * 60 : valor;
             }
 
-            // --- LIMPIEZA DE PALABRAS PEGADAS (Solución Leche1) ---
-            string pasoCorregido = Regex.Replace(pasoLimpio, @"([a-zñáéíóú])(\d)", "$1 $2");
-            pasoCorregido = pasoCorregido.Replace("con", " con ").Replace("y", " y ").Replace("  ", " ");
-
-            // 3. Extracción de Ingredientes
-            string patronIng = @"(\d+(?:[\.,]\d+)?)\s*(gramos|gr|g|kilogramos|kg|ml|litros|l|taza|tazas|piezas|pzas)?\s*(?:de\s+)?([a-záéíóúñ\s]+)";
-            var matchesIng = Regex.Matches(pasoCorregido, patronIng, RegexOptions.IgnoreCase);
-
-            foreach (Match m in matchesIng)
-            {
-                string cantidadStr = m.Groups[1].Value.Replace(',', '.');
-                string unidadStr = m.Groups[2].Value.Trim().ToLower();
-                string nombreDetectado = m.Groups[3].Value.Trim();
-
-                if (string.IsNullOrEmpty(unidadStr)) unidadStr = "unidad";
-
-                string[] palabrasDeCorte = { " y ", "cocinar", "por", "durante", "hervir", "minutos", "min" };
-                foreach (var corte in palabrasDeCorte)
-                {
-                    int indiceCorte = nombreDetectado.IndexOf(corte, StringComparison.OrdinalIgnoreCase);
-                    if (indiceCorte != -1) nombreDetectado = nombreDetectado.Substring(0, indiceCorte).Trim();
-                }
-
-                if (!string.IsNullOrWhiteSpace(nombreDetectado) && nombreDetectado.Length > 1)
-                {
-                    nuevoPaso.Ingredientes.Add(new Ingrediente
-                    {
-                        Cantidad = double.TryParse(cantidadStr, out double cant) ? cant : 0,
-                        Unidad = unidadStr,
-                        Nombre = nombreDetectado
-                    });
-                }
-            }
-            RecetaAEditar.Pasos.Add(nuevoPaso);
+            // Sincronizamos con la lista visual
+            PasosVisuales.Add(nuevoPaso);
         }
-        RecognitionText = $"Receta actualizada: {RecetaAEditar.Pasos.Count} pasos.";
+        RecognitionText = $"Voz procesada: {PasosVisuales.Count} pasos en total.";
     }
 
+    // --- GUARDAR Y LIMPIAR ---
     private async void OnGuardarClicked(object sender, EventArgs e)
     {
         try
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
-                await DisplayAlert("Aviso", "Por favor, introduce un nombre para la receta.", "OK");
+                await DisplayAlert("Aviso", "Por favor, introduce un nombre.", "OK");
                 return;
             }
 
+            // Antes de guardar, pasamos lo que hay en la lista visual a la receta real
             RecetaAEditar.Nombre = txtNombre.Text;
+            RecetaAEditar.Pasos = PasosVisuales.ToList();
 
             if (RecetaAEditar.Id == 0)
-            {
                 await _recetaService.AddRecetaAsync(RecetaAEditar);
-            }
             else
-            {
                 await _recetaService.UpdateRecetaAsync(RecetaAEditar);
-            }
 
-            // --- NAVEGACIÓN SEGURA ---
-            // En lugar de Shell.Current (que te da error), usamos Navigation.PopAsync
-            // que es mucho más estable para volver a la pantalla anterior.
-            await MainThread.InvokeOnMainThreadAsync(async () =>
-            {
-                await Navigation.PopAsync();
-            });
+            await Navigation.PopAsync();
         }
         catch (Exception ex)
         {
-            string errorDetallado = ex.Message;
-            if (ex.InnerException != null) errorDetallado += " -> " + ex.InnerException.Message;
-            await DisplayAlert("Error al Guardar", errorDetallado, "OK");
+            await DisplayAlert("Error", ex.Message, "OK");
         }
     }
 
@@ -201,10 +193,13 @@ public partial class CrearReceta : ContentPage, INotifyPropertyChanged
     {
         txtNombre.Text = string.Empty;
         RecognitionText = string.Empty;
-        RecetaAEditar.Pasos.Clear();
+        PasosVisuales.Clear();
     }
 
     private void OnCancelListenClicked(object sender, EventArgs e) => _tokenSource?.Cancel();
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }
 
 public static class StringExtensions

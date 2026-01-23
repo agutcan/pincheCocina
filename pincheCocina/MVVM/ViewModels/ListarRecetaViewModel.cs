@@ -7,7 +7,10 @@ namespace pincheCocina.MVVM.ViewModels
     public class ListarRecetaViewModel
     {
         private readonly IRecetaService _recetaService;
+
+        // Propiedad simple para guardar "mano" o "micro"
         public string ModoSeleccionado { get; set; }
+
         public ObservableCollection<Receta> Recetas { get; set; } = new();
 
         public ListarRecetaViewModel(IRecetaService recetaService)
@@ -24,6 +27,7 @@ namespace pincheCocina.MVVM.ViewModels
                 Recetas.Add(receta);
             }
         }
+
         public async Task EliminarRecetaAsync(int id)
         {
             await _recetaService.DeleteRecetaAsync(id);

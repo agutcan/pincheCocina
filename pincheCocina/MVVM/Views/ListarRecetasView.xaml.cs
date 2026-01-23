@@ -23,7 +23,13 @@ public partial class ListarRecetasView : ContentPage
 
     private async void Button_Clicked(object sender, EventArgs e)
     {
+        // 1. Pedimos la página de creación
         var page = App.Services.GetRequiredService<CrearReceta>();
+
+        // 2. Le pasamos el modo que tenemos guardado en el ViewModel de esta lista
+        page.ModoSeleccionado = _viewModel.ModoSeleccionado;
+
+        // 3. Navegamos
         await Navigation.PushAsync(page);
     }
 
@@ -45,18 +51,27 @@ public partial class ListarRecetasView : ContentPage
 
     private async void OnModificarClicked(object sender, EventArgs e)
     {
-        var button = sender as Button;
-        var receta = button?.CommandParameter as Receta;
+        try
+        {
+            var button = sender as Button;
+            var receta = button?.CommandParameter as Receta;
 
-        if (receta == null) return;
+            if (receta == null) return;
 
-        // Pedimos la página al contenedor de servicios
-        var page = App.Services.GetRequiredService<CrearReceta>();
+            // Obtenemos la página
+            var page = App.Services.GetRequiredService<CrearReceta>();
 
-        // Le pasamos la receta a editar
-        page.RecetaAEditar = receta;
+            // ASIGNACIÓN CRÍTICA: Primero pasamos los datos
+            page.ModoSeleccionado = _viewModel.ModoSeleccionado;
+            page.RecetaAEditar = receta;
 
-        await Navigation.PushAsync(page);
+            // Navegamos
+            await Navigation.PushAsync(page);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", "No se pudo abrir la edición: " + ex.Message, "OK");
+        }
     }
 
     private async void OnPasoTapped(object sender, TappedEventArgs e)
