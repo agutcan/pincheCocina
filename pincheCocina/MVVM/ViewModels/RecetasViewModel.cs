@@ -9,6 +9,7 @@ namespace pincheCocina.MVVM.ViewModels;
 public class RecetasViewModel
 {
     public ObservableCollection<Receta> ListaRecetas { get; set; }
+    public string ModoSeleccionado { get; set; }
 
     public RecetasViewModel()
     {

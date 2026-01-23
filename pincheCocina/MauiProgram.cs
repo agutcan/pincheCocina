@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using pincheCocina.MVVM.Models;
+using pincheCocina.MVVM.ViewModels;
 using pincheCocina.MVVM.Views;
 
 #if WINDOWS
@@ -22,13 +23,20 @@ namespace pincheCocina
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
+            // --- TUS REGISTROS AQUÍ ---
+
+            // 1. Registramos el ViewModel de Recetas
+            builder.Services.AddTransient<RecetasViewModel>();
+
+            // 2. Registramos las Vistas (Views)
+            builder.Services.AddTransient<InicioView>();
+            builder.Services.AddTransient<RecetasView>();
             builder.Services.AddTransient<CrearReceta>();
 
 #if WINDOWS
-
             builder.Services.AddSingleton<ISpeechToText, SpeechToTextImplementation>();
 #endif
 

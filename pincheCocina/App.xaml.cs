@@ -5,15 +5,21 @@ namespace pincheCocina
 {
     public partial class App : Application
     {
-        public App()
+        public static IServiceProvider Services { get; private set; }
+
+        public App(IServiceProvider services)
         {
             InitializeComponent();
-            MainPage = new NavigationPage(new InicioView());
+            Services = services;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(MainPage);
+            // Resolvemos la vista unificada desde el contenedor de servicios
+            // Esto inyectará automáticamente el ViewModel registrado
+            var inicioPage = Services.GetRequiredService<InicioView>();
+
+            return new Window(new NavigationPage(inicioPage));
         }
     }
 }
