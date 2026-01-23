@@ -11,7 +11,10 @@
             <VerticalStackLayout Spacing="8">
                 <Label Text="Nombre de la Receta" FontAttributes="Bold" FontSize="16" TextColor="DodgerBlue"/>
                 <Frame Padding="10,2" BorderColor="#E0E0E0" CornerRadius="10" HasShadow="False">
-                    <Entry x:Name="txtNombre" Placeholder="Ej: Tacos al Pastor" FontSize="18"/>
+                    <Entry x:Name="txtNombre" 
+                           Text="{Binding NombreReceta}" 
+                           Placeholder="Ej: Tacos al Pastor" 
+                           FontSize="18"/>
                 </Frame>
             </VerticalStackLayout>
 
