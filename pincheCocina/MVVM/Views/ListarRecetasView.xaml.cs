@@ -90,7 +90,7 @@ public partial class ListarRecetasView : ContentPage
                         .Replace("g", "gramos")
                         .Replace("kg", "kilogramos")
                         .Replace("ml", "mililitros")
-                        .Replace("l", "litros");
+                        .Replace("L", "litros");
 
                     sb.Append($"{ing.Cantidad} {unidadLeible} de {ing.Nombre}. ");
                 }
