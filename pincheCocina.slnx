@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="pincheCocina/pincheCocina.csproj" />
+  <Project Path="TestProject1/TestProject1.csproj" Id="ef48c0f8-127a-4251-bbe3-63dbd01d343e" />
 </Solution>
