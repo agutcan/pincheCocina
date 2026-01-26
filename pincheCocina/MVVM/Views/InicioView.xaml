@@ -2,10 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="pincheCocina.MVVM.Views.InicioView"
-             Title="InicioView">
+             Title="InicioView"
+             BackgroundColor="White">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="9*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -13,35 +14,55 @@
         </Grid.ColumnDefinitions>
 
         <!-- Botón izquierdo -->
-        <ImageButton
-             Source="mano.png"
-            Clicked="ImageButton_Clicked_1"
-            Grid.Row="0"
-            Grid.Column="0"
-            Margin="20"
-            VerticalOptions="Center"
-            Background="Transparent"/>
+        <Frame CornerRadius="15"
+               HasShadow="False"
+               BorderColor="#E0E0E0"
+               Padding="0" IsClippedToBounds="True"
+               BackgroundColor="White"
+               VerticalOptions="Center"
+               Margin="10,0,5,0">
+            <VerticalStackLayout>
+                <BoxView Color="DodgerBlue" HeightRequest="5"/>
+                <ImageButton
+                    Source="mano.png"
+                    Clicked="ImageButton_Clicked_1"
+                    Margin="20"
+                    Background="Transparent"/>
+            </VerticalStackLayout>
+        </Frame>
+
 
         <!-- Botón derecho -->
-        <ImageButton
-            Source="micro.png"
-            Clicked="ImageButton_Clicked"
-            Grid.Row="0"
-            Grid.Column="1"            
-            Margin="20"
-            VerticalOptions="Center"
-            Background="Transparent"/>
+        <Frame CornerRadius="15"
+               HasShadow="False"
+               BorderColor="#E0E0E0"
+               Padding="0" IsClippedToBounds="True"
+               BackgroundColor="White"
+               VerticalOptions="Center"
+               Grid.Column="1"
+               Margin="5,0,10,0">
+            <VerticalStackLayout>
+                <BoxView Color="DodgerBlue" HeightRequest="5"/>
+                <ImageButton
+                    Source="micro.png"
+                    Clicked="ImageButton_Clicked"
+                    Margin="20"
+                    Background="Transparent"/>
+            </VerticalStackLayout>
+        </Frame>
 
+        
         <!-- Label inferior -->
         <Label
-            Text="Texto en la parte inferior"
-            Grid.Row="0"
+            Text="Selecciona el modo de control"
+            Grid.Row="2"
             Grid.ColumnSpan="2"
             HorizontalOptions="Center"
-            VerticalOptions="End"
-            FontSize="16"
+            VerticalOptions="Start"
+            FontSize="25"
             Margin="90"
-            x:Name="label"/>
+            x:Name="label"
+            TextColor="Black"/>
 
     </Grid>
 
