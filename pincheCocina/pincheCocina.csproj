@@ -77,12 +77,6 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.2" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="MVVM\Views\CrearRecetaAntiguo.xaml.cs">
-	    <DependentUpon>CrearRecetaAntiguo.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
 
 	<ItemGroup>
 	  <MauiXaml Update="MVVM\Views\CrearReceta.xaml">
@@ -94,7 +88,10 @@
 	  <MauiXaml Update="MVVM\Views\ListarRecetasView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="MVVM\Views\CrearRecetaAntiguo.xaml">
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="MVVM\Views\InicioView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

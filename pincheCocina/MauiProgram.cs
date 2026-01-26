@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using pincheCocina.Data;
 using pincheCocina.MVVM.Models;
+using pincheCocina.MVVM.ViewModels;
 using pincheCocina.MVVM.Views;
 using pincheCocina.MVVM.ViewModels;
 using pincheCocina.Services;
@@ -45,7 +46,7 @@ namespace pincheCocina
             // Vistas
             builder.Services.AddTransient<ListarRecetasView>();
             builder.Services.AddTransient<CrearReceta>();
-
+            builder.Services.AddTransient<InicioView>();
             // ---------------------------------------
 
 #if DEBUG

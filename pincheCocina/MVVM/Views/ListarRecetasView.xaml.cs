@@ -24,6 +24,7 @@ public partial class ListarRecetasView : ContentPage
     private async void Button_Clicked(object sender, EventArgs e)
     {
         var page = App.Services.GetRequiredService<CrearReceta>();
+        page.ModoSeleccionado = _viewModel.ModoSeleccionado;
         await Navigation.PushAsync(page);
     }
 
@@ -45,18 +46,23 @@ public partial class ListarRecetasView : ContentPage
 
     private async void OnModificarClicked(object sender, EventArgs e)
     {
-        var button = sender as Button;
-        var receta = button?.CommandParameter as Receta;
+        try
+        {
+            var button = sender as Button;
+            var receta = button?.CommandParameter as Receta;
 
-        if (receta == null) return;
+            if (receta == null) return;
 
-        // Pedimos la página al contenedor de servicios
-        var page = App.Services.GetRequiredService<CrearReceta>();
+            var page = App.Services.GetRequiredService<CrearReceta>();
+            page.ModoSeleccionado = _viewModel.ModoSeleccionado;
+            page.RecetaAEditar = receta;
 
-        // Le pasamos la receta a editar
-        page.RecetaAEditar = receta;
-
-        await Navigation.PushAsync(page);
+            await Navigation.PushAsync(page);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", "No se pudo abrir la edición: " + ex.Message, "OK");
+        }
     }
 
     private async void OnPasoTapped(object sender, TappedEventArgs e)
@@ -65,39 +71,11 @@ public partial class ListarRecetasView : ContentPage
 
         try
         {
-            // Usamos StringBuilder para mayor eficiencia si el texto es largo
-            var sb = new System.Text.StringBuilder();
+            // El ViewModel construye el string
+            string textoParaHablar = _viewModel.ObtenerTextoLecturaPaso(paso);
 
-            sb.Append($"Paso: {paso.Accion}. ");
-
-            if (paso.TiempoMinutos > 0)
-            {
-                sb.Append($"Tiempo estimado: {paso.TiempoMinutos} minutos. ");
-            }
-
-            if (paso.Ingredientes != null && paso.Ingredientes.Count > 0)
-            {
-                sb.Append("Ingredientes necesarios: ");
-                foreach (var ing in paso.Ingredientes)
-                {
-                    // Manejamos el reemplazo de forma segura si Unidad es nulo
-                    string unidadOriginal = ing.Unidad?.ToLower() ?? "";
-
-                    string unidadLeible = unidadOriginal
-                        .Replace("pzas", "piezas")
-                        .Replace("pza", "pieza")
-                        .Replace("gr", "gramos")
-                        .Replace("g", "gramos")
-                        .Replace("kg", "kilogramos")
-                        .Replace("ml", "mililitros")
-                        .Replace("L", "litros");
-
-                    sb.Append($"{ing.Cantidad} {unidadLeible} de {ing.Nombre}. ");
-                }
-            }
-
-            // Cancelamos cualquier lectura anterior antes de empezar una nueva
-            TextToSpeech.Default.SpeakAsync(sb.ToString(), new SpeechOptions
+            // La View ejecuta la acción de voz
+            await TextToSpeech.Default.SpeakAsync(textoParaHablar, new SpeechOptions
             {
                 Pitch = 1.0f,
                 Volume = 1.0f
@@ -105,7 +83,6 @@ public partial class ListarRecetasView : ContentPage
         }
         catch (Exception ex)
         {
-            // Si falla el motor de voz (ej. en simuladores), al menos la app no se cierra
             System.Diagnostics.Debug.WriteLine($"Error TTS: {ex.Message}");
         }
     }

@@ -11,28 +11,83 @@
             <VerticalStackLayout Spacing="8">
                 <Label Text="Nombre de la Receta" FontAttributes="Bold" FontSize="16" TextColor="DodgerBlue"/>
                 <Frame Padding="10,2" BorderColor="#E0E0E0" CornerRadius="10" HasShadow="False">
-                    <Entry x:Name="txtNombre" Placeholder="Ej: Tacos al Pastor" FontSize="18"/>
+                    <Entry x:Name="txtNombre" 
+                           Text="{Binding NombreReceta}" 
+                           Placeholder="Ej: Tacos al Pastor" 
+                           FontSize="18"/>
                 </Frame>
             </VerticalStackLayout>
 
             <BoxView HeightRequest="1" Color="#F0F0F0" Margin="0,10"/>
 
-            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" HeightRequest="30" IsVisible="{Binding EstaEscuchando}">
-                <Ellipse WidthRequest="12" HeightRequest="12" Fill="Red" VerticalOptions="Center"/>
-                <Label Text="GRABANDO..." TextColor="Red" FontAttributes="Bold" VerticalOptions="Center"/>
-            </HorizontalStackLayout>
+            <VerticalStackLayout Spacing="20">
+                <VerticalStackLayout.Triggers>
+                    <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding ModoSeleccionado}" Value="mano">
+                        <Setter Property="IsVisible" Value="False" />
+                    </DataTrigger>
+                </VerticalStackLayout.Triggers>
 
-            <Grid ColumnDefinitions="*, *, Auto" ColumnSpacing="10">
-                <Button Grid.Column="0" Text="🎙️ Dictar" Clicked="OnListenClicked" BackgroundColor="DodgerBlue" TextColor="White" FontAttributes="Bold" CornerRadius="10"/>
-                <Button Grid.Column="1" Text="🗑️ Limpiar" Clicked="OnLimpiarClicked" BackgroundColor="#9E9E9E" TextColor="White" CornerRadius="10"/>
-                <Button Grid.Column="2" Text="🛑" Clicked="OnCancelListenClicked" BackgroundColor="#FF5252" TextColor="White" WidthRequest="50" CornerRadius="10"/>
-            </Grid>
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" HeightRequest="30" IsVisible="{Binding EstaEscuchando}">
+                    <Ellipse WidthRequest="12" HeightRequest="12" Fill="Red" VerticalOptions="Center"/>
+                    <Label Text="GRABANDO..." TextColor="Red" FontAttributes="Bold" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
 
-            <Frame BackgroundColor="#F9F9F9" BorderColor="#E0E0E0" HasShadow="False" CornerRadius="10" MinimumHeightRequest="120">
-                <Label x:Name="lblRecognitionText" Text="{Binding RecognitionText}" TextColor="#424242" FontSize="15" FontAttributes="Italic" HorizontalTextAlignment="Center"/>
-            </Frame>
+                <Grid ColumnDefinitions="*, *, Auto" ColumnSpacing="10">
+                    <Button Grid.Column="0" Text="🎙️ Dictar" Clicked="OnListenClicked" BackgroundColor="DodgerBlue" TextColor="White" FontAttributes="Bold" CornerRadius="10"/>
+                    <Button Grid.Column="1" Text="🗑️ Limpiar" Clicked="OnLimpiarClicked" BackgroundColor="#9E9E9E" TextColor="White" CornerRadius="10"/>
+                    <Button Grid.Column="2" Text="🛑" Clicked="OnCancelListenClicked" BackgroundColor="#FF5252" TextColor="White" WidthRequest="50" CornerRadius="10"/>
+                </Grid>
 
-            <Button Text="💾 Guardar Receta" Clicked="OnGuardarClicked" BackgroundColor="#2ECC71" TextColor="White" FontSize="18" FontAttributes="Bold" HeightRequest="60" CornerRadius="15" Margin="0,20,0,0"/>
+                <Frame BackgroundColor="#F9F9F9" BorderColor="#E0E0E0" HasShadow="False" CornerRadius="10" MinimumHeightRequest="120">
+                    <Label x:Name="lblRecognitionText" Text="{Binding RecognitionText}" TextColor="#424242" FontSize="15" FontAttributes="Italic" HorizontalTextAlignment="Center"/>
+                </Frame>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="15">
+                <VerticalStackLayout.Triggers>
+                    <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding ModoSeleccionado}" Value="micro">
+                        <Setter Property="IsVisible" Value="False" />
+                    </DataTrigger>
+                </VerticalStackLayout.Triggers>
+
+                <Label Text="Nueva Acción / Paso" FontAttributes="Bold" FontSize="16" TextColor="DodgerBlue"/>
+
+                <Frame Padding="10,2" BorderColor="#E0E0E0" CornerRadius="10" HasShadow="False">
+                    <Entry x:Name="txtAccionManual" Placeholder="Ej: Cortar la cebolla en dados" FontSize="16"/>
+                </Frame>
+
+                <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                    <Frame Grid.Column="0" Padding="10,2" BorderColor="#E0E0E0" CornerRadius="10" HasShadow="False">
+                        <Entry x:Name="txtTiempoManual" Placeholder="Tiempo (minutos)" Keyboard="Numeric" FontSize="16"/>
+                    </Frame>
+                    <Button Grid.Column="1" Text="➕" Clicked="OnAnadirPasoManualClicked" BackgroundColor="DodgerBlue" TextColor="White" WidthRequest="60" CornerRadius="10" FontAttributes="Bold"/>
+                </Grid>
+
+                <Label Text="Pasos en esta receta:" FontSize="13" TextColor="Gray" Margin="0,10,0,0"/>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding PasosVisuales}" Spacing="5">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout Spacing="10">
+                                <Label Text="•" TextColor="DodgerBlue" VerticalOptions="Center"/>
+                                <Label Text="{Binding Accion}" FontSize="14" TextColor="#333" VerticalOptions="Center"/>
+                                <Label Text="{Binding TiempoMinutos, StringFormat='({0} min)'}" 
+                                       FontSize="12" 
+                                       TextColor="Gray" 
+                                       VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding TiempoMinutos}" Value="0">
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <Button Text="💾 Guardar Receta Completa" Clicked="OnGuardarClicked" BackgroundColor="#2ECC71" TextColor="White" FontSize="18" FontAttributes="Bold" HeightRequest="60" CornerRadius="15" Margin="0,20,0,0"/>
 
         </VerticalStackLayout>
     </ScrollView>

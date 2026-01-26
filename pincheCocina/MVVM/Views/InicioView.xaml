@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="pincheCocina.MVVM.Views.InicioView"
+             Title="InicioView">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Botón izquierdo -->
+        <ImageButton
+             Source="mano.png"
+            Clicked="ImageButton_Clicked_1"
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="20"
+            VerticalOptions="Center"
+            Background="Transparent"/>
+
+        <!-- Botón derecho -->
+        <ImageButton
+            Source="micro.png"
+            Clicked="ImageButton_Clicked"
+            Grid.Row="0"
+            Grid.Column="1"            
+            Margin="20"
+            VerticalOptions="Center"
+            Background="Transparent"/>
+
+        <!-- Label inferior -->
+        <Label
+            Text="Texto en la parte inferior"
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            HorizontalOptions="Center"
+            VerticalOptions="End"
+            FontSize="16"
+            Margin="90"
+            x:Name="label"/>
+
+    </Grid>
+
+</ContentPage>
