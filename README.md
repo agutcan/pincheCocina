@@ -170,7 +170,7 @@ El proyecto incluye un **proyecto de pruebas unitarias independiente** (`TestPro
 ### 1️⃣ Clonar el Repositorio
 
 ```bash
-git clone [url-del-repo]
+git clone https://github.com/agutcan/pincheCocina
 ```
 
 ### 2️⃣ Instalar Workloads de .NET MAUI
@@ -186,7 +186,7 @@ dotnet workload install maui
 Clona el repositorio del proyecto en tu máquina local:
 
 ```bash
-git clone [url-del-repo]
+git clone https://github.com/agutcan/pincheCocina
 ```
 
 Accede al directorio del proyecto:
@@ -232,10 +232,6 @@ Paquetes principales utilizados:
 - Compatible con Windows 10 / 11
 - Utiliza **WinUI 3** como backend de UI
 
-#### iOS
-- Requiere macOS con Xcode instalado
-- Compilación mediante Mac local o remoto
-
 ---
 
 ### 📝 Notas Técnicas
@@ -248,6 +244,6 @@ Paquetes principales utilizados:
 
 # IMPORTANTE!!
 Ejemplos funcionales de crear receta con audio:
-- // Poner a hervir 2 litros de agua luego añadir 500 gramos de macarrones y cocinar por 10 minutos y por último escurrir y servir.
-- // Mezclar 250 g de harina con 2 piezas de huevo después añadir 100 g de mantequilla y batir por 5 minutos
-- // Añadir 250 ml de leche y 1 l de caldo siguiente paso cocinar a fuego lento por 15 minutos
+- Poner a hervir 2 litros de agua luego añadir 500 gramos de macarrones y cocinar por 10 minutos y por último escurrir y servir.
+- Mezclar 250 g de harina con 2 piezas de huevo después añadir 100 g de mantequilla y batir por 5 minutos
+- Añadir 250 ml de leche y 1 l de caldo siguiente paso cocinar a fuego lento por 15 minutos
