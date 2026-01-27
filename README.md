@@ -1,3 +1,9 @@
+# Trabajo realizado por:
+- Antonio Loeches Gavilán
+- Pablo Romo Grilo
+- Juan Antonio Castro Moreno
+- Aarón Gutiérrez Caña
+
 # 🍳 pincheCocina – Smart Recipe Assistant
 
 **pincheCocina** es una aplicación móvil multiplataforma desarrollada con **.NET MAUI** que redefine la gestión de recetas mediante un enfoque híbrido y manos libres.  
